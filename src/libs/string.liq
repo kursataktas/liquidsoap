@@ -95,17 +95,28 @@ def string.contains(~prefix="", ~substring="", ~suffix="", s) =
   ans()
 end
 
-# What remains of a string after a given prefix.
+# What remains of a string after a given prefix. By default, `error.string` is raised
+# if the string does not begin with the given prefix. You can set `raise=false` to return
+# the empty string `""` in such cases.
 # @category String
+# @param ~raise Raise `error.string` if the string does not begin with the given prefix
 # @param ~prefix Requested prefix.
-def string.residual(~prefix, s) =
+def string.residual(~raise=true, ~prefix, s) =
   n = string.length(prefix)
   if
     string.contains(prefix=prefix, s)
   then
     string.sub(s, start=n, length=string.length(s) - n)
   else
-    null()
+    if
+      raise
+    then
+      error.raise(
+        error.string,
+        "String #{s} does not begin with #{prefix}"
+      )
+    end
+    ""
   end
 end
 

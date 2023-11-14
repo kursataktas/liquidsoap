@@ -70,8 +70,14 @@ def protocol.process.parse(~default_timeout, arg) =
       string.contains(prefix="timeout=", list.hd(args))
     then
       let [timeout, extname, ...cmd] = args
-      timeout = string.residual(prefix="timeout=", timeout)
-      timeout = null.map(string.to_float, timeout) ?? default_timeout
+
+      timeout =
+        try
+          string.to_float(string.residual(prefix="timeout=", timeout))
+        catch _ do
+          default_timeout
+        end
+
       timeout = min(default_timeout, timeout)
       {timeout=timeout, extname=extname, cmd=cmd}
     else

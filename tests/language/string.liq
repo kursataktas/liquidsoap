@@ -75,7 +75,15 @@ def f() =
   )
   test.equals(string.quote("aa'bb"), "\"aa'bb\"")
   test.equals(string.residual(prefix="ab", "abcd"), "cd")
-  test.equals(string.residual(prefix="xx", "abcd"), null())
+  test.equals(string.residual(raise=false, prefix="xx", "abcd"), "")
+
+  try
+    string.residual(prefix="xx", "abcd")
+    test.fail()
+  catch _ : [error.string] do
+    ()
+  end
+
   test.equals(string.nth("abcde", 2), 99)
   test.equals(string.index(substring="cd", "abcde"), 2)
   test.equals(string.index(substring="e", "abcde"), 4)

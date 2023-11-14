@@ -518,13 +518,12 @@ def harbor.http.static.base(
 
   def handler(request, response) =
     response.headers(headers)
-    rpath = string.residual(prefix=basepath, request.path)
     if
-      not null.defined(rpath)
+      not string.contains(prefix=basepath, request.path)
     then
       response.status_code(404)
     else
-      rpath = null.get(rpath)
+      rpath = string.residual(raise=true, prefix=basepath, request.path)
       fname = path.concat(directory, rpath)
       log.debug(
         "Serving static file: #{fname}"
